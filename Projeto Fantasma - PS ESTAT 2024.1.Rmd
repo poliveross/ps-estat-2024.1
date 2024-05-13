@@ -117,7 +117,7 @@ df_terrenos_frequentes <- mutate(df_terrenos_frequentes, trap_work_first = case_
     trap_work_first %>% str_detect("FALSE") ~ "Falso"))
 grafico3 <- ggplot(df_terrenos_frequentes, aes(x = setting_terrain)) + 
   geom_bar(aes(fill = trap_work_first), position = "fill") + 
-  labs(title = "Gráfico de barras da ativação de primeira da Armadilha de acordo com o Terreno", x = "Terreno", y = "Frequência relativa", fill = "Ativação de primeira da Armadilha") + 
+  labs(title = "Gráfico de barras da ativação de primeira da Armadilha pelo Terreno", x = "Terreno", y = "Frequência relativa", fill = "Ativação de primeira da Armadilha") + 
   theme_estat()
 ggsave("colunas-uni-freq-rel.pdf", width = 158, height = 93, units = "mm")
 grafico3
@@ -165,17 +165,3 @@ grafico5 <- ggplot(banco_final4_na_captura) +
 ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
 grafico5
 ```
-
-###Tópico aparte
-
-```{r}
-grafico_plus <- ggplot(df_terrenos_frequentes, aes(x = setting_terrain, fill = trap_work_first)) +
-  geom_bar(position = "stack") +
-  labs(title = "Ativação da Armadilha pela Primeira Vez por Tipo de Terreno",
-       x = "Tipo de Terreno",
-       y = "Contagem") +
-  scale_fill_manual(values = c("red", "green"), labels = c("Não Funcionou", "Funcionou"))
-grafico_plus
-```
-
-
