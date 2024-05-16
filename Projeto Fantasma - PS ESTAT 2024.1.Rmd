@@ -117,7 +117,7 @@ df_terrenos_frequentes <- mutate(df_terrenos_frequentes, trap_work_first = case_
     trap_work_first %>% str_detect("FALSE") ~ "Falso"))
 grafico3 <- ggplot(df_terrenos_frequentes, aes(x = setting_terrain)) + 
   geom_bar(aes(fill = trap_work_first), position = "fill") + 
-  labs(title = "Gráfico de barras da ativação de primeira da Armadilha pelo Terreno", x = "Terreno", y = "Frequência relativa", fill = "Ativação de primeira da Armadilha") + 
+  labs(title = "Gráfico de colunas da primeira ativação das armadilhas pelo Terreno", x = "Terreno", y = "Frequência relativa", fill = "Primeira ativação da Armadilha") + 
   theme_estat()
 ggsave("colunas-uni-freq-rel.pdf", width = 158, height = 93, units = "mm")
 grafico3
@@ -130,12 +130,16 @@ grafico4 <- ggplot(banco_final) +
   aes(x = imdb, y = engagement) + 
   geom_point(colour = "#A11D21", size = 3) + 
   labs(
+    title = "Gráfico de Dispersão do Engajamento pelas Notas IMDB", 
     x = "Notas IMDB", 
     y = "Engajamento"
   ) + 
   theme_estat()
-ggsave("disp_uni.pdf", width = 158, height = 93, units = "mm")
+ggsave("disp_uni_analise4.pdf", width = 158, height = 93, units = "mm")
 grafico4
+
+coef_correlacao_pearson_analise4 <- cor(banco_final$engagement, banco_final$imdb, method = "pearson")
+print(coef_correlacao_pearson)
 ```
 
 ###Análise 5

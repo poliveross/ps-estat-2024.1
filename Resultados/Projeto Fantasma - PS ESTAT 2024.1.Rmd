@@ -1,5 +1,5 @@
 ---
-title: "Análise 1 - Projeto Fantasma - PS ESTAT 2024.1"
+title: "Projeto Fantasma - PS ESTAT 2024.1"
 author: "Pedro Oliveros Santarem_232014861"
 date: "2024-04-27"
 output: html_document
@@ -50,7 +50,7 @@ O projeto a seguir pode-se tratar de um tema um tanto quanto comico e... infanti
 O nosso banco de dados está baseado nas características e acontecimentos de toda a série "Scooby Doo"
 Já o software que utilizaremos para realizar as análises e gráficos é o RStudio, ferramenta muito utilizada por estatísticos pois ela é eficiente para a análise de dados.
 
-###Tópico 1
+###Análise 1
 
 ```{r}
 anos <- substr(banco_final$date_aired, 1, 4)
@@ -81,20 +81,24 @@ ggsave("grafico_de_barras_analise1.pdf", width = 158, height = 93, units = "mm")
 grafico1
 ```
 
-###Tópico 2
+###Análise 2
 
 ```{r}
-ggplot(banco_final) + 
-  aes(x = reorder(season, imdb, FUN = median), y = imdb) + 
+banco_final2_1 <- banco_final %>% 
+  filter(season %in% c(1, 2, 3, 4))
+
+ggplot(banco_final2_1) + 
+  aes(x = season, y = imdb) + 
   geom_boxplot(fill = c("#A11D21"), width = 0.5) + 
   stat_summary(
     fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
     ) + 
   labs(x = "Temporada", y = "Classificação IMDB") + 
   theme_estat()
+ggsave("boxplot_analise2.pdf", width = 158, height = 93, units = "mm")
 ```
 
-###Tópico 3
+###Análise 3
 
 ```{r}
 banco_final_na_trap_first <- banco_final[!is.na(banco_final$trap_work_first), ]
@@ -104,14 +108,22 @@ print(terrenos_frequentes)
 
 ```{r}
 df_terrenos_frequentes <- subset(banco_final_na_trap_first, setting_terrain %in% terrenos_frequentes)
+df_terrenos_frequentes <- mutate(df_terrenos_frequentes, setting_terrain = case_when(
+    setting_terrain %>% str_detect("Urban") ~ "Urbano", 
+    setting_terrain %>% str_detect("Forest") ~ "Floresta",
+    setting_terrain %>% str_detect("Rural") ~ "Rural"))
+df_terrenos_frequentes <- mutate(df_terrenos_frequentes, trap_work_first = case_when(
+    trap_work_first %>% str_detect("TRUE") ~ "Verdadeiro", 
+    trap_work_first %>% str_detect("FALSE") ~ "Falso"))
 grafico3 <- ggplot(df_terrenos_frequentes, aes(x = setting_terrain)) + 
   geom_bar(aes(fill = trap_work_first), position = "fill") + 
-  labs(x = "Terreno", y = "Frequência relativa") + 
+  labs(title = "Gráfico de colunas da primeira ativação das armadilhas pelo Terreno", x = "Terreno", y = "Frequência relativa", fill = "Primeira ativação da Armadilha") + 
   theme_estat()
+ggsave("colunas-uni-freq-rel.pdf", width = 158, height = 93, units = "mm")
 grafico3
 ```
 
-###Tópico 4
+###Análise 4
 
 ```{r}
 grafico4 <- ggplot(banco_final) + 
@@ -126,7 +138,7 @@ ggsave("disp_uni.pdf", width = 158, height = 93, units = "mm")
 grafico4
 ```
 
-###Tópico 5
+###Análise 5
 
 ```{r}
 banco_final4 <- banco_final %>%
