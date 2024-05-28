@@ -62,22 +62,34 @@ banco_final2 <- cbind(banco_final1, anos)
 banco_final2 <- banco_final2 %>%
   mutate(anos = as.numeric(anos), 
          decadas = case_when(
-    anos >= 1971 & anos <= 1980 ~ "Década 70",
-    anos >= 1981 & anos <= 1990 ~ "Década 80",
-    anos >= 1991 & anos <= 2000 ~ "Década 90",
-    anos >= 2001 & anos <= 2010 ~ "Década 00",
-    anos >= 2011 & anos <= 2020 ~ "Década 10",
+    anos == 1969 ~ "1960",
+    anos >= 1970 & anos <= 1979 ~ "1970",
+    anos >= 1980 & anos <= 1989 ~ "1980",
+    anos >= 1990 & anos <= 1999 ~ "1990",
+    anos >= 2000 & anos <= 2009 ~ "2000",
+    anos >= 2010 & anos <= 2019 ~ "2010",
+    anos >= 2020 & anos <= 2021 ~ "2020",
     TRUE ~ NA_character_
     ))
+banco_final2 <- mutate(banco_final2, Formato = case_when(
+    format %>% str_detect("Movie") ~ "Filme", 
+    format %>% str_detect("CrossOver") ~ "CrossOver", 
+    format %>% str_detect("Serie") ~ "Série"))
 banco_final2_na_decada <- banco_final2[!is.na(banco_final2$decadas), ]
 ```
 
 ```{r}
-grafico1 <- ggplot(banco_final2_na_decada, aes(x = decadas)) + 
-  geom_bar(aes(fill = format), position = "dodge" ) + 
-  labs(x = "Década", y = "Frequência") + 
+freq_format_decadas <- banco_final2_na_decada %>% 
+  group_by(decadas, Formato) %>% 
+  summarise(frequencia = n()) %>% 
+  ungroup()
+grafico1 <- ggplot(freq_format_decadas) + 
+  aes(x = decadas, y = frequencia, group = Formato, colour = Formato) + 
+  geom_line(size = 1) + 
+  geom_point(size = 2) + 
+  labs(x = "Décadas", y = "Frequência") + 
   theme_estat()
-ggsave("grafico_de_barras_analise1.pdf", width = 158, height = 93, units = "mm")
+ggsave("series_grupo_analise1.pdf", width = 158, height = 93, units = "mm")
 grafico1
 ```
 
@@ -86,6 +98,12 @@ grafico1
 ```{r}
 banco_final2_1 <- banco_final %>% 
   filter(season %in% c(1, 2, 3, 4))
+
+banco_final2_1 <- mutate(banco_final2_1, season = case_when(
+    season %>% str_detect("1") ~ "1ª", 
+    season %>% str_detect("2") ~ "2ª", 
+    season %>% str_detect("3") ~ "3ª",
+    season %>% str_detect("4") ~ "4ª"))
 
 ggplot(banco_final2_1) + 
   aes(x = season, y = imdb) + 
@@ -128,9 +146,8 @@ grafico3
 ```{r}
 grafico4 <- ggplot(banco_final) + 
   aes(x = imdb, y = engagement) + 
-  geom_point(colour = "#A11D21", size = 3) + 
+  geom_point(colour = "#A11D21", size = 3, alpha = 0.55) + 
   labs(
-    title = "Gráfico de Dispersão do Engajamento pelas Notas IMDB", 
     x = "Notas IMDB", 
     y = "Engajamento"
   ) + 
@@ -139,7 +156,7 @@ ggsave("disp_uni_analise4.pdf", width = 158, height = 93, units = "mm")
 grafico4
 
 coef_correlacao_pearson_analise4 <- cor(banco_final$engagement, banco_final$imdb, method = "pearson")
-print(coef_correlacao_pearson)
+print(coef_correlacao_pearson_analise4)
 ```
 
 ###Análise 5
@@ -166,6 +183,6 @@ grafico5 <- ggplot(banco_final4_na_captura) +
   ) + 
   labs(x = "Responsável pela Captura", y = "Engajamento") + 
   theme_estat()
-ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
+ggsave("box_bi_analise5.pdf", width = 158, height = 93, units = "mm")
 grafico5
 ```
