@@ -134,10 +134,10 @@ df_terrenos_frequentes <- mutate(df_terrenos_frequentes, trap_work_first = case_
     trap_work_first %>% str_detect("TRUE") ~ "Verdadeiro", 
     trap_work_first %>% str_detect("FALSE") ~ "Falso"))
 grafico3 <- ggplot(df_terrenos_frequentes, aes(x = setting_terrain)) + 
-  geom_bar(aes(fill = trap_work_first), position = "fill") + 
-  labs(title = "Gráfico de colunas da primeira ativação das armadilhas pelo Terreno", x = "Terreno", y = "Frequência relativa", fill = "Primeira ativação da Armadilha") + 
+  geom_bar(aes(fill = trap_work_first), position = "stack") + 
+  labs(x = "Terreno", y = "Frequência", fill = "A armadilha ativou de primeira") + 
   theme_estat()
-ggsave("colunas-uni-freq-rel.pdf", width = 158, height = 93, units = "mm")
+ggsave("colunas_bi_analise3.pdf", width = 158, height = 93, units = "mm")
 grafico3
 ```
 
@@ -169,10 +169,9 @@ banco_final4 <- banco_final %>%
     caught_velma == TRUE ~ "Velma",
     caught_shaggy == TRUE ~ "Salsicha",
     captured_scooby == TRUE ~ "Scooby",
-    caught_other == TRUE ~ "Outro personagem",
-    caught_not == TRUE ~ "Vilão não capturado", 
-    TRUE ~ NA_character_
-  ))
+    caught_other == TRUE ~ "Outro",
+    caught_not == TRUE ~ "Nenhum", 
+    TRUE ~ NA_character_))
 banco_final4_na_captura <- banco_final4[!is.na(banco_final4$responsavel_captura), ]
 
 grafico5 <- ggplot(banco_final4_na_captura) + 
