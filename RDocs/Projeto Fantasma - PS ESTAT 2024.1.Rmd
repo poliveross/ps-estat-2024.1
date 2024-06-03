@@ -131,7 +131,6 @@ print_quadro_resumo <- function(data, var_name, title = "Medidas resumo da(o) [n
 
 O projeto a seguir pode-se tratar de um tema um tanto quanto comico e... infantil. Entretanto, o nosso objetivo aqui é muito claro. A realização de análises e gráficos a respeito do tema, nos permitirá chegar a diversas inferencias e, fundamentar com dados a "chave do sucesso", que, consequentemente, facilitará a melhora nos resultados posteriores da empresa que nos contratou.
 O nosso banco de dados está baseado nas características e acontecimentos de toda a série "Scooby Doo"
-Já o software que utilizaremos para realizar as análises e gráficos é o RStudio, ferramenta muito utilizada por estatísticos pois ela é eficiente para a análise de dados.
 
 ###Análise 1
 
