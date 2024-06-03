@@ -220,9 +220,19 @@ df_terrenos_frequentes <- mutate(df_terrenos_frequentes, setting_terrain = case_
 df_terrenos_frequentes <- mutate(df_terrenos_frequentes, trap_work_first = case_when(
     trap_work_first %>% str_detect("TRUE") ~ "Verdadeiro", 
     trap_work_first %>% str_detect("FALSE") ~ "Falso"))
-grafico3 <- ggplot(df_terrenos_frequentes, aes(x = setting_terrain)) + 
-  geom_bar(aes(fill = trap_work_first), position = "stack") + 
-  labs(x = "Terreno", y = "Frequência", fill = "A armadilha ativou de primeira") + 
+df_frequencias <- df_terrenos_frequentes %>%
+  group_by(setting_terrain, trap_work_first) %>%
+  summarise(freq = n()) %>%
+  ungroup() %>%
+  group_by(setting_terrain) %>%
+  mutate(freq_relativa = round(freq / sum(freq) * 100, 1))
+porcentagens <- str_replace(paste0(df_frequencias$freq_relativa, "%"), "\\.", ",")
+legendas <- str_squish(paste0(df_frequencias$freq, " (", porcentagens, ")"))
+grafico3 <- ggplot(df_frequencias) +
+  aes(x = setting_terrain, y = freq, fill = trap_work_first, label = legendas) + 
+  geom_col(position = position_dodge(preserve = "single")) + 
+  geom_text(position = position_dodge(width = 0.9), vjust = -0.5, hjust = 0.5, size = 3) + 
+  labs(x = "Terreno", y = "Frequência", fill = "A armadilha ativou de primeira") +
   theme_estat()
 ggsave("colunas_bi_analise3.pdf", width = 158, height = 93, units = "mm")
 grafico3
